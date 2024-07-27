@@ -1,83 +1,49 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(PlayerMovement), typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-public class Player : MonoBehaviour, IDamageable
+[RequireComponent(typeof(PlayerMover), typeof(PlayerAttack))]
+[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
+public class Player : MonoBehaviour
 {
     [SerializeField] private float _maxHealth = 100;
-    [SerializeField] private float _damage = 10;
-    [SerializeField] private float _attackRadius = 50;
 
-    [SerializeField] private PlayerMovement _playerMovement;
-
-    private float _currentHealth;
+    private Health _health;
     private int _wallet;
-    private IHealthReceive _healthReceiver;
-
-    public float MaxHealth => _maxHealth;
 
     public event Action<int> Taken;
+    public event Action<float> HealthChanged;
+    public event Action Dead;
 
-    private void OnEnable()
+    public float MaxHealth => _health.GetMaxHealth();
+
+    public void TakeDamage(float damage)
     {
-        _playerMovement.Jumped += Attack;
+        _health.TakeDamage(damage);
+
+        HealthChanged?.Invoke(_health.GetCurrentHealth());
     }
 
-    private void OnDisable()
-    {
-        _playerMovement.Jumped -= Attack;
-    }
+    private void Awake() =>
+        _health = new Health(_maxHealth);
 
-    private void Start()
-    {
-        _currentHealth = _maxHealth;
-    }
+    private void OnEnable() =>
+        _health.Died += Died;
+
+    private void OnDisable() =>
+        _health.Died -= Died;
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.TryGetComponent<Coin>(out Coin coin))
+        if (other.gameObject.TryGetComponent(out Coin coin))
         {
             _wallet += coin.Collect();
             Taken?.Invoke(_wallet);
         }
     }
 
-    private void Attack()
+    private void Died()
     {
-        foreach(Enemy enemy in GetAttackedObjects())
-        {
-            enemy.TakeDamage(_damage);
-        }  
-    }
-
-    private List<Enemy> GetAttackedObjects()
-    {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _attackRadius);
-
-        List<Enemy> enemies = new();
-
-        foreach(Collider2D hit in hits)
-            if(hit.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
-                enemies.Add(enemy);
-
-        return enemies;
-    }
-
-    public void Initialize(IHealthReceive healthReceive)
-    {
-        _healthReceiver = healthReceive;
-    }
-
-    public void TakeDamage(float damage)
-    {
-        _healthReceiver.View(_currentHealth -= damage);
-
-        if (_currentHealth <= 0)
-        {
-            _currentHealth = 0;
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        Dead?.Invoke();
     }
 }

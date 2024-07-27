@@ -4,15 +4,11 @@ public abstract class State : MonoBehaviour
 {
     protected IStateable _stateable;
 
-    private void Awake()
-    {
+    private void Awake() =>
         OnAwake();
-    }
 
-    public void Initialize(IStateable stateable)
-    {
+    public void Initialize(IStateable stateable) =>
         _stateable = stateable;
-    }
 
     public virtual void Enter() =>
         enabled = true;

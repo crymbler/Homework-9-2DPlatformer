@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent (typeof(CircleCollider2D))]
@@ -5,8 +6,9 @@ public class TriggerZone : MonoBehaviour
 {
     [SerializeField] private Vector2 _triggerZone;
 
-    private ITriggerDetected _triggerDetected;
     private CircleCollider2D _circleCollider2D;
+
+    public Action Detected;
 
     private void Start()
     {
@@ -16,14 +18,7 @@ public class TriggerZone : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Player>(out Player player))
-        {
-            _triggerDetected?.StartPatrolling();
-        }
-    }
-
-    public void Initialize(ITriggerDetected triggerDetected)
-    {
-        _triggerDetected = triggerDetected;
+        if (collision.gameObject.TryGetComponent(out Player _))
+            Detected?.Invoke();
     }
 }

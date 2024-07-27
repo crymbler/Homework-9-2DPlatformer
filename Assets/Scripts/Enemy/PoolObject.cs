@@ -22,6 +22,22 @@ public class PoolObject : MonoBehaviour
         }
     }
 
+    public bool TryGetObject(out Enemy enemy)
+    {
+        if (_pool.Count > 0)
+            enemy = GetObject();
+        else
+            enemy = null;
+
+        return enemy != null;
+    }
+
+    public void ReturnObject(Enemy returnedEnemy)
+    {
+        returnedEnemy.gameObject.SetActive(false);
+        _pool.Enqueue(returnedEnemy);
+    }
+
     private Enemy GetObject()
     {
         Enemy takenObject = _pool.Dequeue();
@@ -33,25 +49,5 @@ public class PoolObject : MonoBehaviour
     private Enemy CreateObject(Enemy prefab)
     {
         return Instantiate(prefab);
-    }
-
-    public bool TryGetObject(out Enemy enemy)
-    {
-        if (_pool.Count > 0)
-        {
-            enemy = GetObject();
-        }
-        else
-        {
-            enemy = null;
-        }
-
-        return enemy != null;
-    }
-
-    public void ReturnObject(Enemy returnedEnemy)
-    {
-        returnedEnemy.gameObject.SetActive(false);
-        _pool.Enqueue(returnedEnemy);
     }
 }

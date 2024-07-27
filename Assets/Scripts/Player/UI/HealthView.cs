@@ -2,19 +2,28 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthView : MonoBehaviour, IHealthReceive
+public class HealthView : MonoBehaviour
 {
     [SerializeField] private Player _player;
     [SerializeField] private Slider _slider;
     [SerializeField] private float _duration;
 
-    Coroutine _coroutine;
+    private Coroutine _coroutine;
 
-    private void Start()
+    private void View(float currentHealth)
     {
-        _slider.maxValue = _player.MaxHealth;
-        _slider.value = _player.MaxHealth;
-        _player.Initialize(this);
+        StopCoroutine();
+        _coroutine = StartCoroutine(SmoothTakeDamage(currentHealth));
+    }
+
+    private void OnEnable()
+    {
+        _player.HealthChanged += View;
+    }
+
+    private void OnDisable()
+    {
+        _player.HealthChanged -= View;
     }
 
     private IEnumerator SmoothTakeDamage(float currentHealth)
@@ -24,12 +33,10 @@ public class HealthView : MonoBehaviour, IHealthReceive
         while (elapsedTime < _duration)
         {
             elapsedTime += Time.deltaTime;
-            _slider.value = Mathf.Lerp(_slider.value, currentHealth, elapsedTime / _duration);
+            _slider.value = Mathf.Lerp(_slider.value, currentHealth / _player.MaxHealth, elapsedTime / _duration);
 
             yield return null;
         }
-
-        StopCoroutine();
     }
 
     private void StopCoroutine()
@@ -37,10 +44,4 @@ public class HealthView : MonoBehaviour, IHealthReceive
         if (_coroutine != null)
             StopCoroutine(_coroutine);
     }
-
-    public void View(float currentHealth)
-    {
-        _coroutine = StartCoroutine(SmoothTakeDamage(currentHealth));
-    }
-
 }

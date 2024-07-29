@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerMover), typeof(PlayerAttack))]
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
@@ -27,18 +26,30 @@ public class Player : MonoBehaviour
     private void Awake() =>
         _health = new Health(_maxHealth);
 
-    private void OnEnable() =>
-        _health.Died += Died;
-
-    private void OnDisable() =>
-        _health.Died -= Died;
-
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnEnable()
     {
-        if (other.gameObject.TryGetComponent(out Coin coin))
+        _health.Died += Died;
+    }
+
+    private void OnDisable()
+    {
+        _health.Died -= Died;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Coin coin))
         {
             _wallet += coin.Collect();
+
             Taken?.Invoke(_wallet);
+        }
+
+        if (collision.gameObject.TryGetComponent(out Heart heart))
+        {
+            _health.Heal(heart.Heal());
+
+            HealthChanged?.Invoke(_health.GetCurrentHealth());
         }
     }
 

@@ -5,7 +5,7 @@ public class Coin : MonoBehaviour
 {
     [SerializeField] private int _value;
 
-    public Action Collected;
+    public event Action Collected;
 
     public int Collect()
     {

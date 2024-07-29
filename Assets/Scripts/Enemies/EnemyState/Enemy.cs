@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D), typeof(Animator))]
-[RequireComponent(typeof(Patroller))]
+[RequireComponent(typeof(Patroller), typeof(PlayerFollower))]
 public class Enemy : MonoBehaviour, IStateable
 {
-
+    private static readonly int Damaged = Animator.StringToHash(nameof(Damaged));
 
     [SerializeField] private float _maxHealth;
     [SerializeField] private float _damage;
@@ -36,15 +36,16 @@ public class Enemy : MonoBehaviour, IStateable
 
     public void TakeDamage(float damage)
     {
-        _animator.SetTrigger("Damaged");
+        _animator.SetTrigger(Damaged);
 
         _health.TakeDamage(damage);
     }
 
     private void Awake()
     {
-        _states.Add(typeof(Patroller), GetComponent<Patroller>());
         _states.Add(typeof(Idle), GetComponent<Idle>());
+        _states.Add(typeof(Patroller), GetComponent<Patroller>());
+        _states.Add(typeof(PlayerFollower), GetComponent<PlayerFollower>());
 
         foreach (State state in _states.Values)
             state.Initialize(this);
@@ -53,14 +54,17 @@ public class Enemy : MonoBehaviour, IStateable
     private void OnEnable()
     {
         _health = new Health(_maxHealth);
+
         _health.Died += ReturnToPool;
-        _triggerZone.Detected += StartPatrolling;
+        _triggerZone.Detected += StartFollowing;
+        _triggerZone.Missed += StartPatrolling;
     }
 
     private void OnDisable()
     {
         _health.Died -= ReturnToPool;
-        _triggerZone.Detected -= StartPatrolling;
+        _triggerZone.Detected -= StartFollowing;
+        _triggerZone.Missed -= StartPatrolling;
     }
 
     private void Start()
@@ -69,7 +73,7 @@ public class Enemy : MonoBehaviour, IStateable
 
         _animator = GetComponentInChildren<Animator>();
 
-        ChangeState(typeof(Idle));
+        ChangeState(typeof(Patroller));
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -83,6 +87,9 @@ public class Enemy : MonoBehaviour, IStateable
     private void ReturnToPool() =>
         Returned?.Invoke(this);
 
-    private void StartPatrolling() =>
+    private void StartPatrolling()  =>
         ChangeState(typeof(Patroller));
+
+    private void StartFollowing() =>
+        ChangeState(typeof(PlayerFollower));
 }

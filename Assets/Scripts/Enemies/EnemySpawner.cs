@@ -28,7 +28,6 @@ public class EnemySpawner : MonoBehaviour
             {
                 enemy.Returned += ReturnToPool;
                 
-
                 enemy.transform.position = transform.position;
             }
 

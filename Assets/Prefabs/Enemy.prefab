@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3069847045980191116}
-  - component: {fileID: 3926607678899212803}
   - component: {fileID: 4122408903504171453}
+  - component: {fileID: 2142849141814896328}
   m_Layer: 7
   m_Name: TriggerZone
   m_TagString: Untagged
@@ -33,8 +33,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3753085645984548781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &3926607678899212803
-CircleCollider2D:
+--- !u!114 &4122408903504171453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5073971101139559159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76fa43e5e3628974d80716b169f5f2d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerZone: {x: 15, y: 8}
+--- !u!61 &2142849141814896328
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -65,22 +78,19 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.5, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 1
---- !u!114 &4122408903504171453
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5073971101139559159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76fa43e5e3628974d80716b169f5f2d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _triggerZone: {x: 15, y: 15}
+  m_Size: {x: 1, y: 0.5}
+  m_EdgeRadius: 0
 --- !u!1 &5379063363660846976
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,6 +107,7 @@ GameObject:
   - component: {fileID: 1363430565683462685}
   - component: {fileID: 2333377762549269854}
   - component: {fileID: 4676545790683961213}
+  - component: {fileID: 8343522736431650173}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -113,7 +124,7 @@ Transform:
   m_GameObject: {fileID: 5379063363660846976}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -34.92, y: 11.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -293,7 +304,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 8596640243658272642, guid: 5d4daff38e3d9174b873918abcf2c1d4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -301,6 +312,19 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8343522736431650173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5379063363660846976}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106677a23b46c474989f3dd5ba6a6780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerZone: {fileID: 4122408903504171453}

@@ -15,10 +15,8 @@ public class EnemySpawner : MonoBehaviour
         StartCoroutine(SpawnEnemy());
     }
 
-    public void ReturnToPool(Enemy enemy)
-    {
+    public void ReturnToPool(Enemy enemy) =>
         _objectPool.ReturnObject(enemy);
-    }
 
     private IEnumerator SpawnEnemy()
     {
@@ -26,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
         {
             if (_objectPool.TryGetObject(out Enemy enemy) == true)
             {
-                enemy.Returned += ReturnToPool;
+                enemy.Died += ReturnToPool;
                 
                 enemy.transform.position = transform.position;
             }

@@ -1,25 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneLouder : MonoBehaviour
+public class SceneLoader : MonoBehaviour
 {
     [SerializeField] private Player _player;
 
-    private void OnEnable()
-    {
+    private void OnEnable() =>
         _player.Dead += Reload;
-    }
 
-    private void OnDisable()
-    {
+    private void OnDisable() =>
         _player.Dead -= Reload;
 
-    }
-
-    private void Reload()
-    {
+    public void Reload() =>
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
 }

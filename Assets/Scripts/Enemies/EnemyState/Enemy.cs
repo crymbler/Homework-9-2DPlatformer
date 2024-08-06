@@ -3,43 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CircleCollider2D), typeof(Animator))]
-[RequireComponent(typeof(Patroller), typeof(PlayerFollower))]
+[RequireComponent(typeof(Patroller), typeof(PlayerFollower), typeof(Health))]
 public class Enemy : MonoBehaviour, IStateable
 {
     private static readonly int Damaged = Animator.StringToHash(nameof(Damaged));
 
-    [SerializeField] private float _maxHealth;
     [SerializeField] private float _damage;
+
+    [SerializeField] private Health _health;
+    [SerializeField] private State _currentState;
 
     [SerializeField] private Animator _animator;
     [SerializeField] private TriggerZone _triggerZone;
 
-    [SerializeField] private State _currentState;
-
     private Dictionary<Type, State> _states = new Dictionary<Type, State>();
 
-    private Health _health;
-
-    public float MaxHealth => _health.GetMaxHealth();
-
-    public event Action<Enemy> Returned;
-
-    public void ChangeState(Type type)
-    {
-        if (_states.TryGetValue(type, out State state) == false)
-            throw new ArgumentException();
-
-        _currentState.Exit();
-        _currentState = state;
-        _currentState.Enter();
-    }
-
-    public void TakeDamage(float damage)
-    {
-        _animator.SetTrigger(Damaged);
-
-        _health.TakeDamage(damage);
-    }
+    public event Action<Enemy> Died;
 
     private void Awake()
     {
@@ -53,8 +32,6 @@ public class Enemy : MonoBehaviour, IStateable
 
     private void OnEnable()
     {
-        _health = new Health(_maxHealth);
-
         _health.Died += ReturnToPool;
         _triggerZone.Detected += StartFollowing;
         _triggerZone.Missed += StartPatrolling;
@@ -84,8 +61,25 @@ public class Enemy : MonoBehaviour, IStateable
         }
     }
 
+    public void ChangeState(Type type)
+    {
+        if (_states.TryGetValue(type, out State state) == false)
+            throw new ArgumentException();
+
+        _currentState.Exit();
+        _currentState = state;
+        _currentState.Enter();
+    }
+
+    public void TakeDamage(float damage)
+    {
+        _animator.SetTrigger(Damaged);
+
+        _health.TakeDamage(damage);
+    }
+
     private void ReturnToPool() =>
-        Returned?.Invoke(this);
+        Died?.Invoke(this);
 
     private void StartPatrolling()  =>
         ChangeState(typeof(Patroller));

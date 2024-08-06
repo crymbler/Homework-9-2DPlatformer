@@ -40,6 +40,12 @@ public class PlayerMover : MonoBehaviour
             Jump();
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Ground _))
+            _isGround = true;
+    }
+
     private void Flip()
     {
         if (_direction > 0)
@@ -63,11 +69,5 @@ public class PlayerMover : MonoBehaviour
         _isGround = false;
 
         Jumped?.Invoke();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out Ground _))
-            _isGround = true;
     }
 }

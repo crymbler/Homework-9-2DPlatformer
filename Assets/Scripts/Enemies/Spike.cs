@@ -6,7 +6,7 @@ public class Spike : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.TryGetComponent<Player>(out Player player))
+        if (other.gameObject.TryGetComponent(out Player player))
             player.TakeDamage(_damage);
     }
 }

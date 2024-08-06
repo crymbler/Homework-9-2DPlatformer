@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] private float _damage = 10;
-    [SerializeField] private float _attackRadius = 50;
+    [SerializeField] private float _attackRadius = 5;
     [SerializeField] private PlayerMover _playerMover;
 
     private void OnEnable() =>

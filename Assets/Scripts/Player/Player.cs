@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
         }
 
         if (collision.gameObject.TryGetComponent(out Heart heart))
-            _health.Heal(heart.Heal());
+            _health.TakeHeal(heart.Heal());
     }
 
     public void TakeDamage(float damage) =>

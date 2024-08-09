@@ -14,7 +14,7 @@ public class HealthShow : MonoBehaviour
     private void OnEnable()
     {
         _health.HealthChanged += View;
-        _maxHealth = _health.MaxHealth;
+        _maxHealth = _health.Max;
     }
 
     private void OnDisable() =>

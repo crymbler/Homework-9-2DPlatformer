@@ -7,7 +7,6 @@ public class PoolObject : MonoBehaviour
     [SerializeField] private float _enemyCount;
 
     private Queue<Enemy> _pool;
-    private Enemy _instanceObject;
 
     private void Awake()
     {
@@ -15,7 +14,7 @@ public class PoolObject : MonoBehaviour
 
         while (_pool.Count < _enemyCount)
         {
-            _instanceObject = CreateObject(_prefab);
+            Enemy _instanceObject = CreateObject(_prefab);
             _instanceObject.gameObject.SetActive(false);
 
             _pool.Enqueue(_instanceObject);

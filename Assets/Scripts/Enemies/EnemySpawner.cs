@@ -25,7 +25,7 @@ public class EnemySpawner : MonoBehaviour
             if (_objectPool.TryGetObject(out Enemy enemy) == true)
             {
                 enemy.Died += ReturnToPool;
-                
+
                 enemy.transform.position = transform.position;
             }
 

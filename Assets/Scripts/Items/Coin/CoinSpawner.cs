@@ -8,19 +8,19 @@ public class CoinSpawner : MonoBehaviour
     [SerializeField] private Coin _prefab;
 
     private Transform _currentSpawnpoint;
-    Transform randomSpawnpoint;
+    private Transform _randomSpawnpoint;
 
     private void Start() =>
         Spawn();
 
     public void Spawn()
     {
-        while (randomSpawnpoint == _currentSpawnpoint)
-            randomSpawnpoint = _spawnpoints[Random.Range(0, _spawnpoints.Count)];
+        while (_randomSpawnpoint == _currentSpawnpoint)
+            _randomSpawnpoint = _spawnpoints[Random.Range(0, _spawnpoints.Count)];
 
-        _currentSpawnpoint = randomSpawnpoint;
+        _currentSpawnpoint = _randomSpawnpoint;
 
-        Coin coin = Instantiate(_prefab, randomSpawnpoint);
+        Coin coin = Instantiate(_prefab, _randomSpawnpoint);
         coin.Collected += Spawn;
     }
 }

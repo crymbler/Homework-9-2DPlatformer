@@ -4,13 +4,20 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     [SerializeField] private Player _player;
+    [SerializeField] private int _sceneNumber;
 
     private void OnEnable() =>
-        _player.Dead += Reload;
+        _player.Dead += BackToMenu;
 
     private void OnDisable() =>
-        _player.Dead -= Reload;
+        _player.Dead -= BackToMenu;
 
-    public void Reload() =>
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    public void LoadGame(int scene) =>
+        SceneManager.LoadScene(scene);
+
+    public void BackToMenu() =>
+        SceneManager.LoadScene(_sceneNumber);
+
+    public void Quit() =>
+        Application.Quit();
 }
